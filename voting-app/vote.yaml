@@ -1,0 +1,45 @@
+# vote page
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote
+  labels:
+    name: vote
+    app: demo-voting-app
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    name: vote-pod
+    app: demo-voting-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote
+  labels:
+    name: vote
+    app: demo-voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: vote-pod
+      app: demo-voting-app
+    
+  template:
+    metadata:
+      name: vote-pod
+      labels:
+        name: vote-pod
+        app: demo-voting-app
+    spec:
+      containers:
+        - name: voting-app
+          image: kodekloud/examplevotingapp_vote:v1
+          ports:
+            - containerPort: 80
+    
